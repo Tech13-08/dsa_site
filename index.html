@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSA Problem Viewer</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="dark-mode">
+    <div class="container">
+      <header>
+        <h1>DSA Problem Viewer</h1>
+        <button id="theme-toggle">Toggle Theme</button>
+      </header>
+      <select id="problem-select">
+        <option value="">Select a problem</option>
+      </select>
+      <div id="loading" style="display: none">Loading...</div>
+      <div class="content">
+        <div class="problem-section">
+          <div class="problem-header">
+            <h2>Problem</h2>
+            <button class="copy-btn" data-target="problem-display">Copy</button>
+          </div>
+          <pre id="problem-display"></pre>
+        </div>
+        <div class="code-section">
+          <div class="code-header">
+            <h2>Solution</h2>
+            <button class="copy-btn" data-target="code-display">Copy</button>
+          </div>
+          <pre id="code-display"></pre>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
