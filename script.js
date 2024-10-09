@@ -4,18 +4,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const codeDisplay = document.getElementById("code-display");
   const themeToggle = document.getElementById("theme-toggle");
   const copyButtons = document.querySelectorAll(".copy-btn");
-  const loadingIndicator = document.getElementById("loading");
 
+  // Set DSA Git Repo
   const owner = "Tech13-08";
   const repo = "dsa_repo";
   const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
 
-  // Theme toggle functionality
   themeToggle.addEventListener("click", () => {
     document.body.classList.toggle("light-mode");
   });
 
-  // Fetch repository contents
   async function fetchRepoContents() {
     try {
       const response = await fetch(apiUrl);
@@ -27,25 +25,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Fetch file content
   async function fetchFileContent(path) {
     try {
       const response = await fetch(`${apiUrl}/${path}`);
       if (!response.ok) throw new Error("Failed to fetch file content");
       const data = await response.json();
-      return atob(data.content); // Decode base64 content
+      return atob(data.content);
     } catch (error) {
       console.error("Error fetching file content:", error);
       return "";
     }
   }
 
-  // Populate problem select
   async function populateSelect() {
-    loadingIndicator.style.display = "block";
+    problemDisplay.textContent = "Loading...";
+    codeDisplay.textContent = "Loading...";
     const files = await fetchRepoContents();
-    loadingIndicator.style.display = "none";
-
+    problemDisplay.textContent = "";
+    codeDisplay.textContent = "";
     files.forEach((file) => {
       if (file.type === "file") {
         const option = document.createElement("option");
@@ -56,14 +53,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Event listener for problem selection
-  problemSelect.addEventListener("change", async () => {
-    if (problemSelect.value) {
-      loadingIndicator.style.display = "block";
-      const content = await fetchFileContent(problemSelect.value);
-      loadingIndicator.style.display = "none";
+  async function parseUrl() {
+    let paramString = window.location.href.split("?")[1];
+    let queryString = new URLSearchParams(paramString);
+    for (let pair of queryString.entries()) {
+      if (pair[0] == "file") {
+        updateContent(pair[1]);
+      }
+    }
+  }
 
-      // Assuming the file content is formatted with "Problem:" and "Solution:" markers
+  async function updateContent(value) {
+    if (value) {
+      problemDisplay.textContent = "Loading...";
+      codeDisplay.textContent = "Loading...";
+      const content = await fetchFileContent(value);
+      problemSelect.value = value;
       const [problem, solution] = content.split(/\n.*CODE.*\n/);
       problemDisplay.textContent = problem.trim();
       codeDisplay.textContent = solution.trim();
@@ -71,9 +76,17 @@ document.addEventListener("DOMContentLoaded", () => {
       problemDisplay.textContent = "";
       codeDisplay.textContent = "";
     }
+  }
+
+  problemSelect.addEventListener("change", async () => {
+    updateContent(problemSelect.value);
+    window.history.pushState(
+      problemSelect.value,
+      "DSA Problem Viewer",
+      window.location.href.split("?")[0] + "?file=" + problemSelect.value
+    );
   });
 
-  // Copy button functionality
   copyButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const targetId = button.getAttribute("data-target");
@@ -94,6 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Initialize the select options
   populateSelect();
+  parseUrl();
 });

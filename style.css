@@ -1,3 +1,4 @@
+/* Customize Dark Mode */
 :root {
   --bg-color: #1e1e1e;
   --text-color: #ffffff;
@@ -7,6 +8,7 @@
   --hover-color: #2c2c2c;
 }
 
+/* Customize Light Mode */
 .light-mode {
   --bg-color: #ffffff;
   --text-color: #333333;
@@ -106,7 +108,6 @@ pre {
   padding: 5px 10px;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -121,7 +122,6 @@ pre {
   animation: fadeIn 0.5s ease-out;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .content {
     flex-direction: column;
